@@ -9,7 +9,7 @@ pipeline {
         stage('Build') {
             steps {
                 echo "Building ${APP_NAME}..."
-                sh './scripts/build.sh'
+                sh './build.sh'
             }
         }
 
