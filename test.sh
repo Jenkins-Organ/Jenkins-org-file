@@ -1,1 +1,1 @@
-echo "Test complete."
+echo "Test completed and ready for closure."
