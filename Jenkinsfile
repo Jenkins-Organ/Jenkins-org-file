@@ -9,7 +9,7 @@ pipeline {
         stage('Build') {
             steps {
                 sh """
-                    sh 'chmod +x ./build.sh'
+                    sh 'chmod +x build.sh'
                     echo Building ${APP_NAME}...
                     sh './build.sh'
                 """
