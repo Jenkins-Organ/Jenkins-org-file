@@ -9,8 +9,9 @@ pipeline {
         stage('Build') {
             steps {
                 sh """
+                    chmod +x build.sh
                     echo Building ${APP_NAME}...
-                    ./scripts/build.sh
+                    sh './build.sh'
                 """
             }
         }
@@ -19,7 +20,7 @@ pipeline {
             steps {
                 sh """
                     echo Running tests...
-                    ./scripts/test.sh
+                    ./test.sh
                 """
             }
         }
