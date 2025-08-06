@@ -8,19 +8,19 @@ pipeline {
     stages {
         stage('Build') {
             steps {
-                sh '''
-                    echo Building ${ APP_NAME }...
-                    sh ./build.sh
-                '''
+                sh """
+                    echo Building ${APP_NAME}...
+                    ./scripts/build.sh
+                """
             }
         }
 
         stage('Test') {
             steps {
-                sh '''
+                sh """
                     echo Running tests...
-                    sh ./scripts/test.sh
-                '''
+                    ./scripts/test.sh
+                """
             }
         }
     }
