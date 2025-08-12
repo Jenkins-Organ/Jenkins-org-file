@@ -25,5 +25,14 @@ pipeline {
                 sh "docker build -t ${IMAGE_NAME}:${IMAGE_TAG} ."
             }
         }
+        
+        stage('Vulnerability Scan with Trivy') {
+            steps {
+                script {
+                    // Scan the just-built Docker image
+                    sh "trivy image --exit-code 1 --severity HIGH,CRITICAL ${IMAGE_NAME}:${IMAGE_TAG}"
+                }
+            }
+        }
     }
 }
