@@ -1,1 +1,2 @@
-echo "Test completed and ready for closure."
+npm install
+npm test -- --coverage
