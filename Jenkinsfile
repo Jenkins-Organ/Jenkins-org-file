@@ -3,45 +3,48 @@ pipeline {
 
     environment {
         APP_NAME = 'my-app'
-        SONAR_TOKEN = credentials('sonar-token') // Store in Jenkins credentials
+        SONAR_HOST_URL = 'https://sonarcloud.io'
+        SONAR_TOKEN = credentials('SONAR_TOKEN') // store SONAR_TOKEN in Jenkins credentials
     }
 
     stages {
+        stage('Install dependencies') {
+            steps {
+                sh 'npm install'
+            }
+        }
+
         stage('Build') {
             steps {
                 sh """
                     chmod +x build.sh
-                    echo Building ${APP_NAME}...
+                    echo "Building ${APP_NAME}..."
                     ./build.sh
                 """
             }
         }
 
-        stage('Test & Sonar Analysis') {
-            parallel {
-                stage('Test') {
-                    steps {
-                        sh """
-                            chmod +x test.sh
-                            echo Running tests with coverage...
-                            ./test.sh
-                        """
-                    }
-                }
+        stage('Test with coverage') {
+            steps {
+                sh """
+                    chmod +x test.sh
+                    echo "Running tests..."
+                    npm run test -- --coverage
+                """
+            }
+        }
 
-                stage('SonarCloud Analysis') {
-                    steps {
-                        // Wait until test coverage is generated
-                        sh 'sleep 5'
-                        sh """
-                            sonar-scanner \
-                              -Dsonar.projectKey=jenkins-organ_test \
-                              -Dsonar.organization=jenkins-organ \
-                              -Dsonar.host.url=https://sonarcloud.io \
-                              -Dsonar.login=${SONAR_TOKEN}
-                        """
-                    }
-                }
+        stage('SonarQube Analysis') {
+            steps {
+                sh """
+                    npx sonar-scanner \
+                        -Dsonar.projectKey=YOUR_PROJECT_KEY \
+                        -Dsonar.organization=YOUR_ORG \
+                        -Dsonar.sources=. \
+                        -Dsonar.host.url=${SONAR_HOST_URL} \
+                        -Dsonar.login=${SONAR_TOKEN} \
+                        -Dsonar.javascript.lcov.reportPaths=coverage/lcov.info
+                """
             }
         }
     }
