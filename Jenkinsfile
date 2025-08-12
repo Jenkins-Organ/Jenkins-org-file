@@ -3,7 +3,7 @@ pipeline {
 
     environment {
         APP_NAME = 'my-app'
-        SONAR_HOST_URL = 'https://sonarcloud.io'
+        SONAR_TOKEN = credentials('sonar-token') // Store in Jenkins credentials
     }
 
     stages {
@@ -17,13 +17,13 @@ pipeline {
             }
         }
 
-        stage('Parallel Test & Sonar Analysis') {
+        stage('Test & Sonar Analysis') {
             parallel {
                 stage('Test') {
                     steps {
                         sh """
                             chmod +x test.sh
-                            echo Running tests...
+                            echo Running tests with coverage...
                             ./test.sh
                         """
                     }
@@ -31,22 +31,15 @@ pipeline {
 
                 stage('SonarCloud Analysis') {
                     steps {
-                        sh '''
-                            if [ ! -d "$WORKSPACE/sonar-scanner" ]; then
-                                echo "Downloading SonarScanner CLI..."
-                                wget -q -O sonar-scanner.zip "https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-5.0.1.3006-linux.zip"
-                                unzip -q sonar-scanner.zip -d $WORKSPACE
-                                mv $WORKSPACE/sonar-scanner-* $WORKSPACE/sonar-scanner
-                                rm sonar-scanner.zip
-                            fi
-                        '''
-                        withCredentials([string(credentialsId: 'SONAR_TOKEN', variable: 'SONAR_TOKEN')]) {
-                            sh '''
-                                export PATH=$WORKSPACE/sonar-scanner/bin:$PATH
-                                sonar-scanner \
-                                  -Dsonar.login=${SONAR_TOKEN}
-                            '''
-                        }
+                        // Wait until test coverage is generated
+                        sh 'sleep 5'
+                        sh """
+                            sonar-scanner \
+                              -Dsonar.projectKey=jenkins-organ_test \
+                              -Dsonar.organization=jenkins-organ \
+                              -Dsonar.host.url=https://sonarcloud.io \
+                              -Dsonar.login=${SONAR_TOKEN}
+                        """
                     }
                 }
             }
@@ -56,7 +49,6 @@ pipeline {
     post {
         always {
             echo 'Pipeline finished.'
-            cleanWs()
         }
     }
 }
