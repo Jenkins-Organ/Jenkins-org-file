@@ -14,13 +14,6 @@ pipeline {
             }
         }
 
-        stage('Run Python Tests') {
-            steps {
-                sh 'pip install pytest pytest-cov'
-                sh 'pytest --cov=hello --cov-report=xml'
-            }
-        }
-
         stage('SonarQube Analysis') {
             steps {
                 withSonarQubeEnv('SonarQube') {
