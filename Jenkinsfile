@@ -4,7 +4,7 @@ pipeline {
     environment {
         IMAGE_NAME = "docker-jenkins"
         IMAGE_TAG = "test"
-        SONAR_TOKEN = credentials('sonar-token') // Jenkins credentials ID for Sonar token
+        SONAR_TOKEN = credentials('SONAR_TOKEN') // Jenkins credentials ID for Sonar token
     }
 
     stages {
