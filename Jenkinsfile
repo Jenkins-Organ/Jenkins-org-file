@@ -38,8 +38,8 @@ pipeline {
             steps {
                 sh """
                     npx sonar-scanner \
-                        -Dsonar.projectKey=YOUR_PROJECT_KEY \
-                        -Dsonar.organization=YOUR_ORG \
+                        -Dsonar.projectKey=jenkins-organ_test \
+                        -Dsonar.organization=Jenkins-Organ \
                         -Dsonar.sources=. \
                         -Dsonar.host.url=${SONAR_HOST_URL} \
                         -Dsonar.login=${SONAR_TOKEN} \
