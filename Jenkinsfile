@@ -2,8 +2,8 @@ pipeline {
     agent any
 
     environment {
-        IMAGE_NAME = "srikanthgowdabs/jenkins"
-        IMAGE_TAG = "tagname" // Change this to your desired tag or make it dynamic
+        IMAGE_NAME = "bssrikanthgowda/test-repo"
+        IMAGE_TAG = "tagname" // Change this to dynamic tag if needed
         SONAR_TOKEN = credentials('SONAR_TOKEN')
         SONAR_SKIP_GITHUB_STATUS = 'true'
     }
